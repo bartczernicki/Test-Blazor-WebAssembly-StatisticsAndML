@@ -10,8 +10,8 @@
         <dd>@mean</dd>
         <dt>Variance:</dt>
         <dd>@variance</dd>
-        <dt>Entropy:</dt>
-        <dd>@entropy</dd>
+        <dt>Time To generate data (ms):</dt>
+        <dd>@TimeToGenerateData</dd>
         <dt>Probability:</dt>
         <dd>
             <SfSlider Min="0.0" Max="1.0" Step="0.1" @bind-Value="@this.Probability" Width="250" ShowButtons="true">
@@ -62,6 +62,7 @@
 
     public double Probability { get; set; }
     public int SamplesSize { get; set; }
+    public double TimeToGenerateData { get; set; }
 
     public class Data
     {
@@ -75,12 +76,15 @@
     {
         this.Probability = 0.6;
         this.SamplesSize = 2500;
+        this.TimeToGenerateData = 0.0;
 
         base.OnInitialized();
     }
 
     private void GenerateDistribution()
     {
+        var dateTime = DateTime.Now;
+
         // create a parametrized distribution instance
         var geometric = new MathNet.Numerics.Distributions.Geometric(this.Probability);
 
@@ -95,5 +99,8 @@
         // non-uniform number sampling
         //var samples = new double[100];
         samples = geometric.Samples().Take(this.SamplesSize).Select(a => new Data { Y = a }).ToList();
+
+        var dateTimeElapsed = (DateTime.Now - dateTime).TotalMilliseconds;
+        this.TimeToGenerateData = dateTimeElapsed;
     }
 }
