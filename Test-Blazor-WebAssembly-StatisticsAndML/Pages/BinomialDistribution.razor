@@ -10,13 +10,18 @@
         <dd>@mean</dd>
         <dt>Variance:</dt>
         <dd>@variance</dd>
-        <dt>Entropy:</dt>
-        <dd>@entropy</dd>
         <dt>Probability:</dt>
         <dd>
-            <SfSlider Min="0.0" Max="1.0" Step="0.1" @bind-Value="@this.Probability" Width="200" ShowButtons="true">
+            <SfSlider Min="0.0" Max="1.0" Step="0.1" @bind-Value="@this.Probability" Width="250" ShowButtons="true">
                 <SliderTooltipData IsVisible="true" ShowOn="TooltipShowOn.Always" Placement="TooltipPlacement.After"></SliderTooltipData>
                 <SliderTicksData Placement="Placement.After" ShowSmallTicks="true" LargeStep="0.5" SmallStep="0.1"></SliderTicksData>
+            </SfSlider>
+        </dd>
+        <dt>Samples Size:</dt>
+        <dd>
+            <SfSlider Min="0" Max="20000" Step="500" @bind-Value="@this.SamplesSize" Width="250" ShowButtons="true">
+                <SliderTooltipData IsVisible="true" ShowOn="TooltipShowOn.Always" Placement="TooltipPlacement.After"></SliderTooltipData>
+                <SliderTicksData Placement="Placement.After" ShowSmallTicks="true" LargeStep="2000" SmallStep="500"></SliderTicksData>
             </SfSlider>
         </dd>
     </dl>
@@ -28,7 +33,7 @@
     <SfChart Title="Binomial Sampling Disitribution">
         <ChartArea><ChartAreaBorder Width="0"></ChartAreaBorder></ChartArea>
 
-        <ChartPrimaryXAxis Minimum="0" Maximum="100">
+        <ChartPrimaryXAxis Minimum="0">
             <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
         </ChartPrimaryXAxis>
 
@@ -54,6 +59,7 @@
 @code {
 
     public double Probability { get; set; }
+    public int SamplesSize { get; set; }
 
     public class Data
     {
@@ -66,6 +72,8 @@
     protected override void OnInitialized()
     {
         this.Probability = 0.6;
+        this.SamplesSize = 2500;
+
         base.OnInitialized();
     }
 
@@ -84,6 +92,6 @@
 
         // non-uniform number sampling
         //var samples = new double[100];
-        samples = binomaial.Samples().Take(2500).Select(a => new Data { Y = a }).ToList();
+        samples = binomaial.Samples().Take(this.SamplesSize).Select(a => new Data { Y = a }).ToList();
     }
 }
