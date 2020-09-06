@@ -20,6 +20,7 @@ namespace Test_Blazor_WebAssembly_StatisticsAndML
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+            // Add Syncfusion for Blazor
             builder.Services.AddSyncfusionBlazor();
 
             await builder.Build().RunAsync();

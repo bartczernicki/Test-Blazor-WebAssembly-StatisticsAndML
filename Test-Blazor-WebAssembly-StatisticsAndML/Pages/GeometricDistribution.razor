@@ -1,10 +1,10 @@
-﻿@page "/BinomialDistribution"
+﻿@page "/GeometricDistribution"
 
 @using Syncfusion.Blazor.Charts
 @using Syncfusion.Blazor.Inputs
 
 <div style="float: left;">
-    <button class="btn btn-primary" @onclick="GenerateDistribution">Generate Samples from Binomial Distribution</button>
+    <button class="btn btn-primary" @onclick="GenerateDistribution">Generate Samples from Geometric Distribution</button>
     <dl>
         <dt>Mean:</dt>
         <dd>@mean</dd>
@@ -25,14 +25,14 @@
 <p />
 
 <div style="clear: both;">
-    <SfChart Title="Binomial Sampling Disitribution">
+    <SfChart Title="Geometric Sampling Disitribution">
         <ChartArea><ChartAreaBorder Width="0"></ChartAreaBorder></ChartArea>
 
         <ChartPrimaryXAxis Minimum="0" Maximum="100">
             <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
         </ChartPrimaryXAxis>
 
-        <ChartPrimaryYAxis Minimum="0" Interval="100" Title="Number of Successful Trials">
+        <ChartPrimaryYAxis Minimum="0" Interval="100" Title="Number of Trials Before First Success">
             <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
         </ChartPrimaryYAxis>
 
@@ -69,21 +69,21 @@
         base.OnInitialized();
     }
 
-        private void GenerateDistribution()
+    private void GenerateDistribution()
     {
         // create a parametrized distribution instance
-        var binomaial = new MathNet.Numerics.Distributions.Binomial(this.Probability, 100);
+        var geometric = new MathNet.Numerics.Distributions.Geometric(this.Probability);
 
         //// distribution properties
-        mean = binomaial.Mean;
-        variance = binomaial.Variance;
-        entropy = binomaial.Entropy;
-        this.Probability = binomaial.P;
+        mean = geometric.Mean;
+        variance = geometric.Variance;
+        entropy = geometric.Entropy;
+        this.Probability = geometric.P;
 
-        //double c = binomaial.CumulativeDistribution(0.6); // CDF
+        //double c = geometric.CumulativeDistribution(0.6); // CDF
 
         // non-uniform number sampling
         //var samples = new double[100];
-        samples = binomaial.Samples().Take(2500).Select(a => new Data { Y = a }).ToList();
+        samples = geometric.Samples().Take(2500).Select(a => new Data { Y = a }).ToList();
     }
 }
