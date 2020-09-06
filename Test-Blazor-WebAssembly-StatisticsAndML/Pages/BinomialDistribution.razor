@@ -1,0 +1,88 @@
+﻿@page "/BinomialDistribution"
+
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Inputs
+
+<div style="float: left;">
+    <button class="btn btn-primary" @onclick="GenerateDistribution">Generate Samples from Binomial Distribution</button>
+    <dl>
+        <dt>Mean:</dt>
+        <dd>@mean</dd>
+        <dt>Variance:</dt>
+        <dd>@variance</dd>
+        <dt>Entropy:</dt>
+        <dd>@entropy</dd>
+        <dt>Probability:</dt>
+        <dd>
+            <SfSlider Min="0.1" Max="1.0" Step="0.1" @bind-Value="@this.Probability" Width="200" ShowButtons="true">
+                <SliderTooltipData IsVisible="true" ShowOn="TooltipShowOn.Always" Placement="TooltipPlacement.After"></SliderTooltipData>
+            </SfSlider>
+        </dd>
+    </dl>
+</div>
+
+<p />
+
+<div style="clear: both;">
+    <SfChart Title="Sampling Disitribution">
+        <ChartArea><ChartAreaBorder Width="0"></ChartAreaBorder></ChartArea>
+
+        <ChartPrimaryXAxis Minimum="0" Maximum="100">
+            <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
+        </ChartPrimaryXAxis>
+
+        <ChartPrimaryYAxis Minimum="0" Interval="100" Title="Number of Successful Trials">
+            <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
+        </ChartPrimaryYAxis>
+
+        <ChartSeriesCollection>
+            <ChartSeries DataSource="@samples" YName="Y" Type="ChartSeriesType.Histogram" BinInterval="1" ShowNormalDistribution="false" ColumnWidth="0.99">
+                <ChartMarker Visible="true" Height="10" Width="10">
+                    <ChartDataLabel Visible="true" Position="LabelPosition.Top">
+                        <ChartDataLabelFont Color="#ffffff" FontWeight="600"></ChartDataLabelFont>
+                    </ChartDataLabel>
+                </ChartMarker>
+            </ChartSeries>
+        </ChartSeriesCollection>
+
+        <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
+    </SfChart>
+</div>
+
+
+@code {
+
+    public double Probability { get; set; }
+
+    public class Data
+    {
+        public double Y;
+    }
+
+    public List<Data> samples = new List<Data>(1000);
+    double mean, variance, entropy;
+
+    protected override void OnInitialized()
+    {
+        this.Probability = 0.6;
+        base.OnInitialized();
+    }
+
+        private void GenerateDistribution()
+    {
+        // create a parametrized distribution instance
+        var binomaial = new MathNet.Numerics.Distributions.Binomial(this.Probability, 100);
+
+        //// distribution properties
+        mean = binomaial.Mean;
+        variance = binomaial.Variance;
+        entropy = binomaial.Entropy;
+        this.Probability = binomaial.P;
+
+        //double c = binomaial.CumulativeDistribution(0.6); // CDF
+
+        // non-uniform number sampling
+        //var samples = new double[100];
+        samples = binomaial.Samples().Take(2500).Select(a => new Data { Y = a }).ToList();
+    }
+}
