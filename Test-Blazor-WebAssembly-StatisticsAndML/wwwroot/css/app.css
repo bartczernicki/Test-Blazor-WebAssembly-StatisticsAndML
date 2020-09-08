@@ -185,10 +185,11 @@ app {
 dt {
     float: left;
     clear: left;
-    width: 14em;
+    width: 16em;
     font-weight: bold;
 }
 
 dd {
     float: left;
+    width: 12em;
 }

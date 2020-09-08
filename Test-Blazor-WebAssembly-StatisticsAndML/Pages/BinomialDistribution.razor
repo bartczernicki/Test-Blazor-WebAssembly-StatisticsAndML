@@ -1,7 +1,6 @@
 ﻿@page "/BinomialDistribution"
 
-@using Syncfusion.Blazor.Charts
-@using Syncfusion.Blazor.Inputs
+@inject IJSRuntime JSRuntime
 
 <div style="float: left;">
     <button class="btn btn-primary" @onclick="GenerateDistribution">Generate Samples from Binomial Distribution</button>
@@ -14,48 +13,22 @@
         <dd>@TimeToGenerateData</dd>
         <dt>Probability:</dt>
         <dd>
-            <SfSlider Min="0.0" Max="1.0" Step="0.1" @bind-Value="@this.Probability" Width="250" ShowButtons="true">
-                <SliderTooltipData IsVisible="true" ShowOn="TooltipShowOn.Always" Placement="TooltipPlacement.After"></SliderTooltipData>
-                <SliderTicksData Placement="Placement.After" ShowSmallTicks="true" LargeStep="0.5" SmallStep="0.1"></SliderTicksData>
-            </SfSlider>
+            <input id="probabilityInput" type="range" class="" style="width: 70%;" min="0.0" max="1.0" step="0.1"
+                   @bind-value="@this.Probability" oninput="probabilityOutput.value=probabilityInput.value" />
+            <output name="probabilityOutput" id="probabilityOutput" for="probabilityInput">@this.Probability</output>
         </dd>
-        <dt>Samples Size:</dt>
+        <dt>SamplesSize:</dt>
         <dd>
-            <SfSlider Min="0" Max="20000" Step="500" @bind-Value="@this.SamplesSize" Width="250" ShowButtons="true">
-                <SliderTooltipData IsVisible="true" ShowOn="TooltipShowOn.Always" Placement="TooltipPlacement.After"></SliderTooltipData>
-                <SliderTicksData Placement="Placement.After" ShowSmallTicks="true" LargeStep="2000" SmallStep="500"></SliderTicksData>
-            </SfSlider>
+            <input id="samplesSizeInput" type="range" class="" style="width: 70%;" min="250" max="20000" step="250"
+                   @bind-value="@this.SamplesSize" oninput="samplesSizeOutput.value=samplesSizeInput.value" />
+            <output name="samplesSizeOutput" id="samplesSizeOutput" for="samplesSizeInput">@this.SamplesSize</output>
         </dd>
     </dl>
 </div>
 
 <p />
-
-<div style="clear: both;">
-    <SfChart Title="Binomial Sampling Disitribution">
-        <ChartArea><ChartAreaBorder Width="0"></ChartAreaBorder></ChartArea>
-
-        <ChartPrimaryXAxis Minimum="0">
-            <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
-        </ChartPrimaryXAxis>
-
-        <ChartPrimaryYAxis Minimum="0" Interval="100" Title="Number of Successful Trials">
-            <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
-        </ChartPrimaryYAxis>
-
-        <ChartSeriesCollection>
-            <ChartSeries DataSource="@samples" YName="Y" Type="ChartSeriesType.Histogram" BinInterval="1" ShowNormalDistribution="false" ColumnWidth="0.99">
-                <ChartMarker Visible="true" Height="10" Width="10">
-                    <ChartDataLabel Visible="true" Position="LabelPosition.Top">
-                        <ChartDataLabelFont Color="#ffffff" FontWeight="600"></ChartDataLabelFont>
-                    </ChartDataLabel>
-                </ChartMarker>
-            </ChartSeries>
-        </ChartSeriesCollection>
-
-        <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
-    </SfChart>
-</div>
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz" style="clear: both;"></div>
 
 
 @code {
@@ -81,7 +54,7 @@
         base.OnInitialized();
     }
 
-    private void GenerateDistribution()
+    private async Task GenerateDistribution()
     {
         var dateTime = DateTime.Now;
 
@@ -97,8 +70,8 @@
         //double c = binomaial.CumulativeDistribution(0.6); // CDF
 
         // non-uniform number sampling
-        //var samples = new double[100];
-        samples = binomaial.Samples().Take(this.SamplesSize).Select(a => new Data { Y = a }).ToList();
+        var samplesArray = binomaial.Samples().Take(this.SamplesSize).ToArray();
+        await JSRuntime.InvokeVoidAsync("createD3SvgObject", samplesArray);
 
         var dateTimeElapsed = (DateTime.Now - dateTime).TotalMilliseconds;
         this.TimeToGenerateData = dateTimeElapsed;

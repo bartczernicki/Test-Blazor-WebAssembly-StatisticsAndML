@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Syncfusion.Blazor;
 
 namespace Test_Blazor_WebAssembly_StatisticsAndML
 {
@@ -19,9 +18,6 @@ namespace Test_Blazor_WebAssembly_StatisticsAndML
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
-            // Add Syncfusion for Blazor
-            builder.Services.AddSyncfusionBlazor();
 
             await builder.Build().RunAsync();
         }
