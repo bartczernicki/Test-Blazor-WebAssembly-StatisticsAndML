@@ -71,7 +71,7 @@
 
         // non-uniform number sampling
         var samplesArray = binomaial.Samples().Take(this.SamplesSize).ToArray();
-        await JSRuntime.InvokeVoidAsync("createD3SvgObject", samplesArray);
+        await JSRuntime.InvokeVoidAsync("createD3SvgObject", samplesArray, mean);
 
         var dateTimeElapsed = (DateTime.Now - dateTime).TotalMilliseconds;
         this.TimeToGenerateData = dateTimeElapsed;

@@ -2,7 +2,7 @@
     return new Set(iterable).size;
 }
 
-function createD3SvgObject(data) {
+function createD3SvgObject(data, mean) {
 
     console.log(data);
     //https://datacadamia.com/viz/d3/histogram#instantiation
@@ -10,7 +10,6 @@ function createD3SvgObject(data) {
     var svgTest = d3.select("#my_dataviz");
     svgTest.selectAll("*").remove();
 
-    //data = [1, 2, 3, 8, 7, 4, 9, 8, 7, 3, 4, 5, 2, 1, 9, 7, 8, 4, 0, 2, 3, 8, 7, 6];
     min = d3.min(data);
     max = d3.max(data);
     domain = [min, max];
@@ -49,14 +48,15 @@ function createD3SvgObject(data) {
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
 
+    // Add 10%
+    var yMax = 1.1*d3.max(bins, function (d) {
+        return d.length;});
+
     var y = d3
         .scaleLinear()
         .range([height, 0])
         .domain([
-            0,
-            d3.max(bins, function (d) {
-                return d.length;
-            })
+            0, yMax
         ]);
 
     svg.append("g").call(d3.axisLeft(y));
@@ -76,5 +76,22 @@ function createD3SvgObject(data) {
         .attr("height", function (d) {
             return height - y(d.length);
         })
-        .style("fill", "#69b3a2");
+        .style("fill", "steelblue");
+
+    // Add line for mean
+    svg
+        .append("line")
+        .attr("x1", x(mean))
+        .attr("x2", x(mean))
+        .attr("y1", y(0))
+        .attr("y2", y(yMax))
+        .attr("stroke", "grey")
+        .attr("stroke-dasharray", "4")
+    // Add text for mean label
+    svg
+        .append("text")
+        .attr("x", x(mean)+2)
+        .attr("y", y(yMax)+10)
+        .text("Mean: " + mean)
+        .style("font-size", "10px")
 }
