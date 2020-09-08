@@ -34,6 +34,17 @@ function createD3SvgObject(data, mean) {
     // And apply this function to data to get the bins
     var bins = histogram(data);
 
+    var color = "steelblue";
+    var yBinMin = d3.min(bins, function (d) { return d.length });
+    var yBinMax = d3.max(bins, function (d) { return d.length });
+    var colorScale = d3.scaleLinear()
+        .domain([yBinMin, yBinMax])
+        .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
+
+    colorScale(0);
+    colorScale(100);
+    colorScale(150);
+
     // Add the svg element to the body and set the dimensions and margins of the graph
     var svg = d3
         .select("#my_dataviz")
@@ -48,7 +59,8 @@ function createD3SvgObject(data, mean) {
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
 
-    // Add 10%
+
+    // Add 10% to Y-axis
     var yMax = 1.1*d3.max(bins, function (d) {
         return d.length;});
 
@@ -76,7 +88,7 @@ function createD3SvgObject(data, mean) {
         .attr("height", function (d) {
             return height - y(d.length);
         })
-        .style("fill", "steelblue");
+        .style("fill", function (d) { return colorScale(d.length) });
 
     // Add line for mean
     svg
