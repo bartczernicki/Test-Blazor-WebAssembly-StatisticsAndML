@@ -5,9 +5,9 @@
 <div style="float: left;">
     <button class="btn btn-primary" @onclick="GenerateDistribution">Generate Samples from Binomial Distribution</button>
     <dl>
-        <dt>Mean:</dt>
+        <dt>Distribution Mean:</dt>
         <dd>@mean</dd>
-        <dt>Variance:</dt>
+        <dt>Distribution Variance:</dt>
         <dd>@variance</dd>
         <dt>Time to generate data (ms):</dt>
         <dd>@TimeToGenerateData</dd>
@@ -28,7 +28,9 @@
 
 <p />
 <!-- Create a div where the graph will take place -->
-<div id="my_dataviz" style="clear: both;"></div>
+<div id="my_dataviz" style="clear: both;">
+
+</div>
 
 
 @code {
@@ -62,7 +64,7 @@
         var binomaial = new MathNet.Numerics.Distributions.Binomial(this.Probability, 100);
 
         //// distribution properties
-        mean = binomaial.Mean;
+        mean = Math.Round(binomaial.Mean, 2, MidpointRounding.AwayFromZero);
         variance = binomaial.Variance;
         entropy = binomaial.Entropy;
         this.Probability = binomaial.P;
@@ -71,7 +73,7 @@
 
         // non-uniform number sampling
         var samplesArray = binomaial.Samples().Take(this.SamplesSize).ToArray();
-        await JSRuntime.InvokeVoidAsync("createD3SvgObject", samplesArray, mean);
+        await JSRuntime.InvokeVoidAsync("createD3SvgObject", samplesArray, mean, "Binomial Sample Distribution");
 
         var dateTimeElapsed = (DateTime.Now - dateTime).TotalMilliseconds;
         this.TimeToGenerateData = dateTimeElapsed;

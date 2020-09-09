@@ -2,15 +2,17 @@
     return new Set(iterable).size;
 }
 
-function createD3SvgObject(data, mean) {
+function createD3SvgObject(data, mean, title) {
 
     console.log(data);
     //https://datacadamia.com/viz/d3/histogram#instantiation
+    //http://bl.ocks.org/nnattawat/8916402
+
 
     var svgTest = d3.select("#my_dataviz");
     svgTest.selectAll("*").remove();
 
-    min = d3.min(data);
+    min = 0; //d3.min(data);
     max = d3.max(data);
     domain = [min, max];
 
@@ -19,7 +21,7 @@ function createD3SvgObject(data, mean) {
         height = 400 - margin.top - margin.bottom;
 
     // The number of bins 
-    Nbin = countUnique(data);
+    Nbin = max; //countUnique(data);
 
     var x = d3
         .scaleLinear()
@@ -41,23 +43,22 @@ function createD3SvgObject(data, mean) {
         .domain([yBinMin, yBinMax])
         .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
 
-    colorScale(0);
-    colorScale(100);
-    colorScale(150);
-
     // Add the svg element to the body and set the dimensions and margins of the graph
     var svg = d3
         .select("#my_dataviz")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .style('background-color', 'WhiteSmoke')
         .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr('class', 'bars')
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     svg
         .append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
+
 
 
     // Add 10% to Y-axis
@@ -73,14 +74,16 @@ function createD3SvgObject(data, mean) {
 
     svg.append("g").call(d3.axisLeft(y));
 
-    svg
-        .selectAll("rect")
+    // Add bars
+    var bar = svg.selectAll(".bar")
         .data(bins)
-        .enter()
-        .append("rect")
-        .attr("x", 1)
-        .attr("transform", function (d) {
-            return "translate(" + x(d.x0) + "," + y(d.length) + ")";
+        .enter().append("g")
+        .attr("class", "bar")
+        .attr("transform", function (d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
+
+    bar.append("rect")
+        .attr("x", function (d) {
+            return -(x(d.x1) - x(d.x0)) / 2 + 1;
         })
         .attr("width", function (d) {
             return x(d.x1) - x(d.x0) - 1;
@@ -88,7 +91,17 @@ function createD3SvgObject(data, mean) {
         .attr("height", function (d) {
             return height - y(d.length);
         })
-        .style("fill", function (d) { return colorScale(d.length) });
+        .style("fill", function (d) {
+            return colorScale(d.length)
+        });
+
+    //bar.append("text")
+    //    .attr("dy", ".75em")
+    //    .attr("y", -10)
+    //    .attr("x", function (d) { return (d.x1 - d.x0); })
+    //    .attr("dx", ".5em")
+    //    .style("font-size", "10px")
+    //    .text(function (d) { if (d.length > 0) { return d.length } });
 
     // Add line for mean
     svg
@@ -102,8 +115,19 @@ function createD3SvgObject(data, mean) {
     // Add text for mean label
     svg
         .append("text")
-        .attr("x", x(mean)+2)
-        .attr("y", y(yMax)+10)
-        .text("Mean: " + mean)
+        .attr("x", x(mean) + 2)
+        .attr("y", y(yMax) + 10)
+        .text("Distribution Mean: " + mean)
         .style("font-size", "10px")
+
+
+    svg
+        .append("text")
+        .attr("class", "title")
+        .attr("x", width / 2) //positions it at the middle of the width
+        .attr("y", -margin.top / 3) //positions it from the top by the margin top
+        .attr("font-family", "'Monotype Corsiva','Apple Chancery','ITC Zapf Chancery','URW Chancery L',cursive")
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .text(title);
 }

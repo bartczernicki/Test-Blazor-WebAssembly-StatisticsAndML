@@ -5,9 +5,9 @@
 <div style="float: left;">
     <button class="btn btn-primary" @onclick="GenerateDistribution">Generate Samples from Geometric Distribution</button>
     <dl>
-        <dt>Mean:</dt>
+        <dt>Distribution Mean:</dt>
         <dd>@mean</dd>
-        <dt>Variance:</dt>
+        <dt>Distribution Variance:</dt>
         <dd>@variance</dd>
         <dt>Time To generate data (ms):</dt>
         <dd>@TimeToGenerateData</dd>
@@ -62,7 +62,7 @@
         var geometric = new MathNet.Numerics.Distributions.Geometric(this.Probability);
 
         //// distribution properties
-        mean = geometric.Mean;
+        mean = Math.Round(geometric.Mean, 2, MidpointRounding.AwayFromZero);
         variance = geometric.Variance;
         entropy = geometric.Entropy;
         this.Probability = geometric.P;
@@ -70,7 +70,7 @@
         //double c = geometric.CumulativeDistribution(0.6); // CDF
 
         var samplesArray = geometric.Samples().Take(this.SamplesSize).ToArray();
-        await JSRuntime.InvokeVoidAsync("createD3SvgObject", samplesArray, mean);
+        await JSRuntime.InvokeVoidAsync("createD3SvgObject", samplesArray, mean, "Geometric Sample Distribution");
 
         var dateTimeElapsed = (DateTime.Now - dateTime).TotalMilliseconds;
         this.TimeToGenerateData = dateTimeElapsed;
