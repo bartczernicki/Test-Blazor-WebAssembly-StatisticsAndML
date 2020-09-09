@@ -63,7 +63,7 @@
 
         //// distribution properties
         mean = Math.Round(geometric.Mean, 2, MidpointRounding.AwayFromZero);
-        variance = geometric.Variance;
+        variance = Math.Round(geometric.Variance, 2, MidpointRounding.AwayFromZero);
         entropy = geometric.Entropy;
         this.Probability = geometric.P;
 

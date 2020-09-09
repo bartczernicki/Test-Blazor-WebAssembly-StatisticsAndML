@@ -74,12 +74,15 @@ function createD3SvgObject(data, mean, title) {
 
     svg.append("g").call(d3.axisLeft(y));
 
+    // Only render bins/visual elements that are non-zero
+    var binsNonZero = bins.filter(bins => bins.length > 0);
+
     // Add bars
     var bar = svg.selectAll(".bar")
-        .data(bins)
+        .data(binsNonZero)
         .enter().append("g")
         .attr("class", "bar")
-        .attr("transform", function (d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
+        .attr("transform", function (d) { return "translate(" + x(d.x0) + "," + y(0) + ")"; });
 
     bar.append("rect")
         .attr("x", function (d) {
@@ -88,12 +91,33 @@ function createD3SvgObject(data, mean, title) {
         .attr("width", function (d) {
             return x(d.x1) - x(d.x0) - 1;
         })
+        //.attr("height", function (d) {
+        //    return height - y(d.length);
+        //})
         .attr("height", function (d) {
-            return height - y(d.length);
+            return 0;
         })
         .style("fill", function (d) {
             return colorScale(d.length)
         });
+
+
+    svg.selectAll("rect")
+        .transition()
+        .duration(100)
+        .attr("height", function (d) { return height - y(d.length); })
+        .delay(function (d, i) {
+            //console.log(i + " - " + (height - y(d.length)));
+            return (i * 50);
+        })
+    svg.selectAll(".bar")
+        .transition()
+        .duration(100)
+        .attr("transform", function (d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .delay(function (d, i) {
+            // console.log(i + " - " + (height - y(d.length)));
+            return (i * 50);
+        })
 
     //bar.append("text")
     //    .attr("dy", ".75em")

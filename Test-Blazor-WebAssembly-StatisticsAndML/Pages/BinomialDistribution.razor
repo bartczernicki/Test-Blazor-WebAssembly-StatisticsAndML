@@ -65,7 +65,7 @@
 
         //// distribution properties
         mean = Math.Round(binomaial.Mean, 2, MidpointRounding.AwayFromZero);
-        variance = binomaial.Variance;
+        variance = Math.Round(binomaial.Variance, 2, MidpointRounding.AwayFromZero);
         entropy = binomaial.Entropy;
         this.Probability = binomaial.P;
 
