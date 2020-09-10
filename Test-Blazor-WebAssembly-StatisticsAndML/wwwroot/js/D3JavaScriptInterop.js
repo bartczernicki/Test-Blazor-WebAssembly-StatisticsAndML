@@ -12,10 +12,12 @@ function createD3SvgObject(data, mean, title) {
     var svgTest = d3.select("#my_dataviz");
     svgTest.selectAll("*").remove();
 
+    // Set the margins
     var margin = { top: 30, right: 30, bottom: 30, left: 50 },
         width = 460 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
+    // For some distributions, ensure 0 placeholder at midpoint is available
     var min = 0;
     var dataMinimum = d3.min(data);
     if (dataMinimum == 0) {
@@ -23,7 +25,8 @@ function createD3SvgObject(data, mean, title) {
     };
     max = d3.max(data);
     domain = [min, max];
-    // The number of bins 
+
+    // The number of bins, for statistics & sampling it should be set to number of unique bins
     Nbin = max; //countUnique(data);
 
     var x = d3
