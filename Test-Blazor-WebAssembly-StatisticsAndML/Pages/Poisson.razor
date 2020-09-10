@@ -1,0 +1,81 @@
+﻿@page "/PoissonDistribution"
+
+@inject IJSRuntime JSRuntime
+
+<div style="float: left;">
+    <button class="btn btn-primary" @onclick="GenerateDistribution">Generate Samples from Poisson Distribution</button>
+    <dl>
+        <dt>Distribution Mean:</dt>
+        <dd>@mean</dd>
+        <dt>Distribution Variance:</dt>
+        <dd>@variance</dd>
+        <dt>Time to generate data (ms):</dt>
+        <dd>@TimeToGenerateData</dd>
+        <dt>Lambda:</dt>
+        <dd>
+            <input id="lambdaInput" type="range" class="" style="width: 70%;" min="0.0" max="10.0" step="0.5"
+                   @bind-value="@this.Lambda" oninput="lambdaOutput.value=lambdaInput.value" />
+            <output name="lambdaOutput" id="lambdaOutput" for="lambdaInput">@this.Lambda</output>
+        </dd>
+        <dt>SamplesSize:</dt>
+        <dd>
+            <input id="samplesSizeInput" type="range" class="" style="width: 70%;" min="250" max="20000" step="250"
+                   @bind-value="@this.SamplesSize" oninput="samplesSizeOutput.value=samplesSizeInput.value" />
+            <output name="samplesSizeOutput" id="samplesSizeOutput" for="samplesSizeInput">@this.SamplesSize</output>
+        </dd>
+    </dl>
+</div>
+
+<p />
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz" style="clear: both;">
+
+</div>
+
+
+@code {
+
+    public double Lambda { get; set; }
+    public int SamplesSize { get; set; }
+    public double TimeToGenerateData { get; set; }
+
+    public class Data
+    {
+        public double Y;
+    }
+
+    public List<Data> samples = new List<Data>(1000);
+    double mean, variance, entropy;
+
+    protected override void OnInitialized()
+    {
+        this.Lambda = 2;
+        this.SamplesSize = 2500;
+        this.TimeToGenerateData = 0.0;
+
+        base.OnInitialized();
+    }
+
+    private async Task GenerateDistribution()
+    {
+        var dateTime = DateTime.Now;
+
+        // create a parametrized distribution instance
+        var poisson = new MathNet.Numerics.Distributions.Poisson(this.Lambda);
+
+        //// distribution properties
+        mean = Math.Round(poisson.Mean, 2, MidpointRounding.AwayFromZero);
+        variance = Math.Round(poisson.Variance, 2, MidpointRounding.AwayFromZero);
+        entropy = poisson.Entropy;
+        //this.Probability = poisson.P;
+
+        //double c = binomaial.CumulativeDistribution(0.6); // CDF
+
+        // non-uniform number sampling
+        var samplesArray = poisson.Samples().Take(this.SamplesSize).ToArray();
+        await JSRuntime.InvokeVoidAsync("createD3SvgObject", samplesArray, mean, "Poisson Sample Distribution");
+
+        var dateTimeElapsed = (DateTime.Now - dateTime).TotalMilliseconds;
+        this.TimeToGenerateData = dateTimeElapsed;
+    }
+}

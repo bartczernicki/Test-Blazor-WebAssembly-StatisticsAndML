@@ -12,14 +12,17 @@ function createD3SvgObject(data, mean, title) {
     var svgTest = d3.select("#my_dataviz");
     svgTest.selectAll("*").remove();
 
-    min = 0; //d3.min(data);
-    max = d3.max(data);
-    domain = [min, max];
-
     var margin = { top: 30, right: 30, bottom: 30, left: 50 },
         width = 460 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
+    var min = 0;
+    var dataMinimum = d3.min(data);
+    if (dataMinimum == 0) {
+        min = -1;
+    };
+    max = d3.max(data);
+    domain = [min, max];
     // The number of bins 
     Nbin = max; //countUnique(data);
 
@@ -59,7 +62,12 @@ function createD3SvgObject(data, mean, title) {
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
 
-
+    svg.selectAll(".tick")
+        .attr("opacity", function (d) {
+            if (d < 0) {
+                return 0;
+            }
+        })
 
     // Add 10% to Y-axis
     var yMax = 1.1*d3.max(bins, function (d) {
@@ -101,7 +109,7 @@ function createD3SvgObject(data, mean, title) {
             return colorScale(d.length)
         });
 
-
+    // Animations
     svg.selectAll("rect")
         .transition()
         .duration(100)
