@@ -1,4 +1,4 @@
-﻿@page "/BinomialDistribution"
+﻿@page "/PoissonDistribution"
 
 @inject IJSRuntime JSRuntime
 
@@ -10,17 +10,11 @@
         <dd>@variance</dd>
         <dt>Time to generate data (ms):</dt>
         <dd>@TimeToGenerateData</dd>
-        <dt>Probability:</dt>
+        <dt>Lambda:</dt>
         <dd>
-            <input id="probabilityInput" type="range" class="" style="width: 70%;" min="0.0" max="1.0" step="0.1"
-                   @bind-value="@this.Probability" oninput="probabilityOutput.value=probabilityInput.value" />
-            <output name="probabilityOutput" id="probabilityOutput" for="probabilityInput">@this.Probability</output>
-        </dd>
-        <dt>Trials:</dt>
-        <dd>
-            <input id="trialsInput" type="range" class="" style="width: 70%;" min="0" max="1000" step="100"
-                   @bind-value="@this.Trials" oninput="trialsOutput.value=trialsInput.value" />
-            <output name="trialsOutput" id="trialsOutput" for="probabilityInput">@this.Trials</output>
+            <input id="lambdaInput" type="range" class="" style="width: 70%;" min="0.0" max="10.0" step="0.5"
+                   @bind-value="@this.Lambda" oninput="lambdaOutput.value=lambdaInput.value" />
+            <output name="lambdaOutput" id="lambdaOutput" for="lambdaInput">@this.Lambda</output>
         </dd>
         <dt>Samples Size:</dt>
         <dd>
@@ -40,9 +34,7 @@
 
 @code {
 
-    public double Probability { get; set; }
-    public int Trials { get; set; }
-
+    public double Lambda { get; set; }
     public int SamplesSize { get; set; }
     public int[] SamplesArray { get; set; }
     public double TimeToGenerateData { get; set; }
@@ -55,11 +47,9 @@
     public List<Data> samples = new List<Data>(1000);
     double mean, variance, entropy;
 
-
     protected override Task OnParametersSetAsync()
     {
-        this.Probability = 0.6;
-        this.Trials = 100;
+        this.Lambda = 2;
         this.SamplesSize = 1000;
         this.TimeToGenerateData = 0.0;
 
@@ -73,23 +63,23 @@
         await RenderChart();
     }
 
-    protected void GenerateDistribution()
+    private void GenerateDistribution()
     {
         var dateTime = DateTime.Now;
 
         // create a parametrized distribution instance
-        var binomaial = new MathNet.Numerics.Distributions.Binomial(this.Probability, this.Trials);
+        var poisson = new MathNet.Numerics.Distributions.Poisson(this.Lambda);
 
         //// distribution properties
-        mean = Math.Round(binomaial.Mean, 2, MidpointRounding.AwayFromZero);
-        variance = Math.Round(binomaial.Variance, 2, MidpointRounding.AwayFromZero);
-        entropy = binomaial.Entropy;
-        this.Probability = binomaial.P;
+        mean = Math.Round(poisson.Mean, 2, MidpointRounding.AwayFromZero);
+        variance = Math.Round(poisson.Variance, 2, MidpointRounding.AwayFromZero);
+        entropy = poisson.Entropy;
+        //this.Probability = poisson.P;
 
         //double c = binomaial.CumulativeDistribution(0.6); // CDF
 
         // non-uniform number sampling
-        this.SamplesArray = binomaial.Samples().Take(this.SamplesSize).ToArray();
+        this.SamplesArray = poisson.Samples().Take(this.SamplesSize).ToArray();
 
         var dateTimeElapsed = (DateTime.Now - dateTime).TotalMilliseconds;
         this.TimeToGenerateData = dateTimeElapsed;
