@@ -12,14 +12,14 @@
         <dd>@TimeToGenerateData</dd>
         <dt>Lambda:</dt>
         <dd>
-            <input id="lambdaInput" type="range" class="" min="0.0" max="10.0" step="0.5"
-                   @bind-value="@this.Lambda" oninput="lambdaOutput.value=lambdaInput.value" />
+            <input id="lambdaInput" type="range" min="0" max="100" step="5"
+                   value="@this.Lambda" @onchange="@OnLambdaUpdated" oninput="lambdaOutput.value=lambdaInput.value" />
             <output name="lambdaOutput" id="lambdaOutput" for="lambdaInput">@this.Lambda</output>
         </dd>
         <dt>Samples Size:</dt>
         <dd>
             <input id="samplesSizeInput" type="range" class="" min="250" max="20000" step="250"
-                   @bind-value="@this.SamplesSize" oninput="samplesSizeOutput.value=samplesSizeInput.value" />
+                   value="@this.SamplesSize" @onchange="@OnSamplesSizeUpdated" oninput="samplesSizeOutput.value=samplesSizeInput.value" />
             <output name="samplesSizeOutput" id="samplesSizeOutput" for="samplesSizeInput">@this.SamplesSize</output>
         </dd>
     </dl>
@@ -45,7 +45,7 @@
     }
 
     public List<Data> samples = new List<Data>(1000);
-    double mean, variance, entropy;
+    double mean, variance;
 
     protected override Task OnParametersSetAsync()
     {
@@ -60,15 +60,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            await RenderChart();
-        }
-        else
-        {
-            this.GenerateDistribution();
-            await RenderChart();
-        }
+        await this.RenderChart();
     }
 
     private void GenerateDistribution()
@@ -81,8 +73,6 @@
         //// distribution properties
         mean = Math.Round(poisson.Mean, 2, MidpointRounding.AwayFromZero);
         variance = Math.Round(poisson.Variance, 2, MidpointRounding.AwayFromZero);
-        entropy = poisson.Entropy;
-        //this.Probability = poisson.P;
 
         //double c = binomaial.CumulativeDistribution(0.6); // CDF
 
@@ -91,6 +81,24 @@
 
         var dateTimeElapsed = (DateTime.Now - dateTime).TotalMilliseconds;
         this.TimeToGenerateData = dateTimeElapsed;
+    }
+
+    private void OnLambdaUpdated(ChangeEventArgs e)
+    {
+        if (int.TryParse((string)e.Value, out var index) && index >= 0)
+        {
+            this.Lambda = index;
+            this.GenerateDistribution();
+        }
+    }
+
+    private void OnSamplesSizeUpdated(ChangeEventArgs e)
+    {
+        if (int.TryParse((string)e.Value, out var index) && index >= 0)
+        {
+            this.SamplesSize = index;
+            this.GenerateDistribution();
+        }
     }
 
     private async Task RenderChart()

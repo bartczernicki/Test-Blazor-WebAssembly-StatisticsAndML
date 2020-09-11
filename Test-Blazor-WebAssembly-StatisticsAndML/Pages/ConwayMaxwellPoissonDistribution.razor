@@ -12,20 +12,20 @@
         <dd>@TimeToGenerateData</dd>
         <dt>Lambda:</dt>
         <dd>
-            <input id="lambdaInput" type="range" class="" min="0.0" max="10.0" step="0.5"
-                   @bind-value="@this.Lambda" oninput="lambdaOutput.value=lambdaInput.value" />
+            <input id="lambdaInput" type="range" min="1" max="10" step="1"
+                   value="@this.Lambda" @onchange="@OnLambdaUpdated" oninput="lambdaOutput.value=lambdaInput.value" />
             <output name="lambdaOutput" id="lambdaOutput" for="lambdaInput">@this.Lambda</output>
         </dd>
         <dt>Nu:</dt>
         <dd>
-            <input id="nuInput" type="range" class="" min="0.2" max="5.0" step="0.2"
-                   @bind-value="@this.Nu" oninput="nuOutput.value=nuInput.value" />
-            <output name="nuOutput" id="nuOutput" for="nuInput">@this.Nu</output>
+            <input id="nuInput" type="range" min="2" max="40" step="2"
+                   value="@this.Nu" @onchange="@OnNuUpdated" oninput="nuOutput.value=nuInput.value/10" />
+            <output name="nuOutput" id="nuOutput" for="nuInput">@(this.Nu/10)</output>
         </dd>
         <dt>Samples Size:</dt>
         <dd>
             <input id="samplesSizeInput" type="range" class="" min="250" max="20000" step="250"
-                   @bind-value="@this.SamplesSize" oninput="samplesSizeOutput.value=samplesSizeInput.value" />
+                   value="@this.SamplesSize" @onchange="@OnSamplesSizeUpdated" oninput="samplesSizeOutput.value=samplesSizeInput.value" />
             <output name="samplesSizeOutput" id="samplesSizeOutput" for="samplesSizeInput">@this.SamplesSize</output>
         </dd>
     </dl>
@@ -56,7 +56,7 @@
     protected override Task OnParametersSetAsync()
     {
         this.Lambda = 2;
-        this.Nu = 1;
+        this.Nu = 10;
         this.SamplesSize = 1000;
         this.TimeToGenerateData = 0.0;
 
@@ -83,7 +83,7 @@
         var dateTime = DateTime.Now;
 
         // create a parametrized distribution instance
-        var poisson = new MathNet.Numerics.Distributions.ConwayMaxwellPoisson(this.Lambda, this.Nu);
+        var poisson = new MathNet.Numerics.Distributions.ConwayMaxwellPoisson(this.Lambda, (double) this.Nu/10);
 
         //// distribution properties
         mean = Math.Round(poisson.Mean, 2, MidpointRounding.AwayFromZero);
@@ -103,5 +103,32 @@
     private async Task RenderChart()
     {
         await JSRuntime.InvokeVoidAsync("createD3SvgObject", this.SamplesArray, mean, "Conway-Maxwell Sample Distribution");
+    }
+
+    private void OnLambdaUpdated(ChangeEventArgs e)
+    {
+        if (int.TryParse((string)e.Value, out var index) && index >= 0)
+        {
+            this.Lambda = index;
+            this.GenerateDistribution();
+        }
+    }
+
+    private void OnNuUpdated(ChangeEventArgs e)
+    {
+        if (int.TryParse((string)e.Value, out var index) && index >= 0)
+        {
+            this.Nu = index;
+            this.GenerateDistribution();
+        }
+    }
+
+    private void OnSamplesSizeUpdated(ChangeEventArgs e)
+    {
+        if (int.TryParse((string)e.Value, out var index) && index >= 0)
+        {
+            this.SamplesSize = index;
+            this.GenerateDistribution();
+        }
     }
 }

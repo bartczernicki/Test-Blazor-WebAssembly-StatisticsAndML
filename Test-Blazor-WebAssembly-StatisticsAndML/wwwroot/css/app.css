@@ -145,6 +145,11 @@ app {
         justify-content: space-between;
     }
 
+    .main > div {
+        padding-left: 0.2rem !important;
+        padding-right: 0.2rem !important;
+    }
+
     .main .top-row a, .main .top-row .btn-link {
         margin-left: 0;
     }
@@ -185,10 +190,12 @@ app {
 dt {
     float: left;
     clear: left;
-    width: 16em;
+    width: 14em;
+    font-size: 0.7em;
     font-weight: bold;
 }
 
 dd {
     float: left;
+    font-size: 0.6em;
 }

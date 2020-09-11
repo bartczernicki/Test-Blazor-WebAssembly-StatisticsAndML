@@ -14,8 +14,8 @@ function createD3SvgObject(data, mean, title) {
 
     // Set the margins
     var margin = { top: 30, right: 30, bottom: 30, left: 50 },
-        width = 440 - margin.left - margin.right,
-        height = 420 - margin.top - margin.bottom;
+        width = 370 - margin.left - margin.right,
+        height = 460 - margin.top - margin.bottom;
 
     // For some distributions, ensure 0 placeholder at midpoint is available
     var min = 0;
@@ -152,8 +152,8 @@ function createD3SvgObject(data, mean, title) {
         .append("text")
         .attr("x", x(mean) + 2)
         .attr("y", y(yMax) + 10)
-        .text("Distribution Mean: " + mean)
-        .style("font-size", "10px")
+        .text("Dist Mean: " + mean)
+        .style("font-size", "8px")
 
 
     svg
