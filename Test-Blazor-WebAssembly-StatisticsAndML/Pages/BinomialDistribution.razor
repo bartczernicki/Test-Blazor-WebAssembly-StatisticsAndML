@@ -70,7 +70,15 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await RenderChart();
+        if (firstRender)
+        {
+            await RenderChart();
+        }
+        else
+        {
+            this.GenerateDistribution();
+            await RenderChart();
+        }
     }
 
     protected void GenerateDistribution()
@@ -97,6 +105,6 @@
 
     private async Task RenderChart()
     {
-        await JSRuntime.InvokeVoidAsync("createD3SvgObject", this.SamplesArray, mean, "Geometric Sample Distribution");
+        await JSRuntime.InvokeVoidAsync("createD3SvgObject", this.SamplesArray, mean, "Binomial Sample Distribution");
     }
 }

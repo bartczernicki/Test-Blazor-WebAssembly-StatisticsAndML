@@ -58,7 +58,15 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await RenderChart();
+        if (firstRender)
+        {
+            await RenderChart();
+        }
+        else
+        {
+            this.GenerateDistribution();
+            await RenderChart();
+        }
     }
 
     private void GenerateDistribution()
