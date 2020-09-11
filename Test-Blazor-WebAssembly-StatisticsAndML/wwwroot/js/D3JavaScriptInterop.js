@@ -14,8 +14,8 @@ function createD3SvgObject(data, mean, title) {
 
     // Set the margins
     var margin = { top: 30, right: 30, bottom: 30, left: 50 },
-        width = 460 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        width = 440 - margin.left - margin.right,
+        height = 420 - margin.top - margin.bottom;
 
     // For some distributions, ensure 0 placeholder at midpoint is available
     var min = 0;

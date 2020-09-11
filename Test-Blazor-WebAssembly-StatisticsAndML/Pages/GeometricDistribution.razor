@@ -12,13 +12,13 @@
         <dd>@TimeToGenerateData</dd>
         <dt>Probability:</dt>
         <dd>
-            <input id="probabilityInput" type="range" class="" style="width: 70%;" min="0.0" max="1.0" step="0.1"
+            <input id="probabilityInput" type="range" class="" min="0.0" max="1.0" step="0.1"
                    @bind-value="@this.Probability" oninput="probabilityOutput.value=probabilityInput.value" />
             <output name="probabilityOutput" id="probabilityOutput" for="probabilityInput">@this.Probability</output>
         </dd>
         <dt>Samples Size:</dt>
         <dd>
-            <input id="samplesSizeInput" type="range" class="" style="width: 70%;" min="250" max="20000" step="250"
+            <input id="samplesSizeInput" type="range" class="" min="250" max="20000" step="250"
                    @bind-value="@this.SamplesSize" oninput="samplesSizeOutput.value=samplesSizeInput.value" />
             <output name="samplesSizeOutput" id="samplesSizeOutput" for="samplesSizeInput">@this.SamplesSize</output>
         </dd>

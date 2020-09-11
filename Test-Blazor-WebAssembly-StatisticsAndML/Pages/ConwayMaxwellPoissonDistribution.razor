@@ -12,19 +12,19 @@
         <dd>@TimeToGenerateData</dd>
         <dt>Lambda:</dt>
         <dd>
-            <input id="lambdaInput" type="range" class="" style="width: 70%;" min="0.0" max="10.0" step="0.5"
+            <input id="lambdaInput" type="range" class="" min="0.0" max="10.0" step="0.5"
                    @bind-value="@this.Lambda" oninput="lambdaOutput.value=lambdaInput.value" />
             <output name="lambdaOutput" id="lambdaOutput" for="lambdaInput">@this.Lambda</output>
         </dd>
         <dt>Nu:</dt>
         <dd>
-            <input id="nuInput" type="range" class="" style="width: 70%;" min="0.2" max="5.0" step="0.2"
+            <input id="nuInput" type="range" class="" min="0.2" max="5.0" step="0.2"
                    @bind-value="@this.Nu" oninput="nuOutput.value=nuInput.value" />
             <output name="nuOutput" id="nuOutput" for="nuInput">@this.Nu</output>
         </dd>
         <dt>Samples Size:</dt>
         <dd>
-            <input id="samplesSizeInput" type="range" class="" style="width: 70%;" min="250" max="20000" step="250"
+            <input id="samplesSizeInput" type="range" class="" min="250" max="20000" step="250"
                    @bind-value="@this.SamplesSize" oninput="samplesSizeOutput.value=samplesSizeInput.value" />
             <output name="samplesSizeOutput" id="samplesSizeOutput" for="samplesSizeInput">@this.SamplesSize</output>
         </dd>
