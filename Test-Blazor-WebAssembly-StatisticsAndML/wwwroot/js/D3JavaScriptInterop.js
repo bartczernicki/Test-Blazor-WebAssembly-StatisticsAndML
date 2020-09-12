@@ -2,12 +2,15 @@
     return new Set(iterable).size;
 }
 
+function formatPower(x) {
+    return x;
+}
+
 function createD3SvgObject(data, mean, title) {
 
     console.log(data);
     //https://datacadamia.com/viz/d3/histogram#instantiation
     //http://bl.ocks.org/nnattawat/8916402
-
 
     var svgTest = d3.select("#my_dataviz");
     svgTest.selectAll("*").remove();
@@ -60,6 +63,22 @@ function createD3SvgObject(data, mean, title) {
             .attr('class', 'bars')
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    // Y-AXIS
+    // Add 10% to Y-axis
+    var yMax = 1.1 * d3.max(bins, function (d) {
+        return d.length;
+    });
+
+    var y = d3
+        .scaleLinear()
+        .range([height, 0])
+        .domain([0, yMax]);
+
+    yAxisLeft = d3.axisLeft(y);
+
+    svg.append("g").call(yAxisLeft);
+
+    // X-AXIS
     svg
         .append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -72,18 +91,7 @@ function createD3SvgObject(data, mean, title) {
             }
         })
 
-    // Add 10% to Y-axis
-    var yMax = 1.1*d3.max(bins, function (d) {
-        return d.length;});
 
-    var y = d3
-        .scaleLinear()
-        .range([height, 0])
-        .domain([
-            0, yMax
-        ]);
-
-    svg.append("g").call(d3.axisLeft(y));
 
     // Only render bins/visual elements that are non-zero
     var binsNonZero = bins.filter(bins => bins.length > 0);
@@ -99,8 +107,16 @@ function createD3SvgObject(data, mean, title) {
         .attr("x", function (d) {
             return -(x(d.x1) - x(d.x0)) / 2 + 1;
         })
+        // Ensure width of bars is 0 or positive
         .attr("width", function (d) {
-            return x(d.x1) - x(d.x0) - 1;
+            var calculatedWidth = x(d.x1) - x(d.x0) - 1;
+
+            if (calculatedWidth >= 0) {
+                return calculatedWidth;
+            }
+            else {
+                return 0;
+            }
         })
         //.attr("height", function (d) {
         //    return height - y(d.length);
