@@ -18,7 +18,7 @@
         </dd>
         <dt>Trials:</dt>
         <dd>
-            <input id="trialsInput" type="range" class="" min="0" max="500" step="100"
+            <input id="trialsInput" type="range" class="" min="0" max="500" step="10"
                     value="@this.Trials" @onchange="@OnTrialsUpdated" oninput="trialsOutput.value=trialsInput.value" />
             <output name="trialsOutput" id="trialsOutput" for="probabilityInput">@this.Trials</output>
         </dd>
@@ -61,7 +61,7 @@
     protected override Task OnParametersSetAsync()
     {
         this.Probability = 60;
-        this.Trials = 100;
+        this.Trials = 10;
         this.SamplesSize = 1000;
         this.TimeToGenerateData = 0.0;
 

@@ -31,6 +31,7 @@ function createD3SvgObject(data, mean, title) {
 
     // The number of bins, for statistics & sampling it should be set to number of unique bins
     Nbin = max; //countUnique(data);
+    var samplesCount = data.length;
 
     var x = d3
         .scaleLinear()
@@ -66,7 +67,7 @@ function createD3SvgObject(data, mean, title) {
     // Y-AXIS
     // Add 10% to Y-axis
     var yMax = 1.1 * d3.max(bins, function (d) {
-        return d.length;
+        return d.length / samplesCount;
     });
 
     var y = d3
@@ -132,7 +133,7 @@ function createD3SvgObject(data, mean, title) {
     svg.selectAll("rect")
         .transition()
         .duration(100)
-        .attr("height", function (d) { return height - y(d.length); })
+        .attr("height", function (d) { return height - y(d.length / samplesCount); })
         .delay(function (d, i) {
             //console.log(i + " - " + (height - y(d.length)));
             return (i * 50);
@@ -140,7 +141,7 @@ function createD3SvgObject(data, mean, title) {
     svg.selectAll(".bar")
         .transition()
         .duration(100)
-        .attr("transform", function (d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .attr("transform", function (d) { return "translate(" + x(d.x0) + "," + y(d.length / samplesCount) + ")"; })
         .delay(function (d, i) {
             // console.log(i + " - " + (height - y(d.length)));
             return (i * 50);
