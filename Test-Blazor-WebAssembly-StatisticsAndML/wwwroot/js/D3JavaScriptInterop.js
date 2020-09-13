@@ -16,7 +16,7 @@ function createD3SvgObject(data, mean, title) {
     svgTest.selectAll("*").remove();
 
     // Set the margins
-    var margin = { top: 30, right: 30, bottom: 30, left: 50 },
+    var margin = { top: 30, right: 30, bottom: 40, left: 50 },
         width = 370 - margin.left - margin.right,
         height = 460 - margin.top - margin.bottom;
 
@@ -172,6 +172,25 @@ function createD3SvgObject(data, mean, title) {
         .text("Dist Mean: " + mean)
         .style("font-size", "8px")
 
+
+    // Add X axis label:
+    svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", width/2)
+        .attr("y", height + margin.bottom/1.25)
+        .text("Count of observations")
+        .style("font-size", "9px")
+        .style("font-weight", "bold");
+
+    // Y axis label:
+    svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("y", 40)
+        .attr("x", (height/2))
+        .attr("transform", "rotate(90)")
+        .text("Probability")
+        .style("font-size", "10px")
+        .style("font-weight", "bold");
 
     svg
         .append("text")
