@@ -18,7 +18,7 @@
         </dd>
         <dt>Nu:</dt>
         <dd>
-            <input id="nuInput" type="range" min="2" max="40" step="2"
+            <input id="nuInput" type="range" min="4" max="40" step="2"
                    value="@this.Nu" @onchange="@OnNuUpdated" oninput="nuOutput.value=nuInput.value/10" />
             <output name="nuOutput" id="nuOutput" for="nuInput">@(this.Nu/10)</output>
         </dd>

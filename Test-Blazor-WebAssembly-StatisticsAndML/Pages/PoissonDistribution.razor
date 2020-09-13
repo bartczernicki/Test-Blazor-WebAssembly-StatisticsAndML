@@ -12,7 +12,7 @@
         <dd>@TimeToGenerateData</dd>
         <dt>Lambda:</dt>
         <dd>
-            <input id="lambdaInput" type="range" min="0" max="100" step="5"
+            <input id="lambdaInput" type="range" min="1" max="10" step="1"
                    value="@this.Lambda" @onchange="@OnLambdaUpdated" oninput="lambdaOutput.value=lambdaInput.value" />
             <output name="lambdaOutput" id="lambdaOutput" for="lambdaInput">@this.Lambda</output>
         </dd>
