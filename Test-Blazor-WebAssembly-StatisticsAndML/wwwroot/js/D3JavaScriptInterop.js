@@ -185,7 +185,7 @@ function createD3SvgObject(data, mean, title) {
     // Y axis label:
     svg.append("text")
         .attr("text-anchor", "middle")
-        .attr("y", 40)
+        .attr("y", 45)
         .attr("x", (height/2))
         .attr("transform", "rotate(90)")
         .text("Probability")
