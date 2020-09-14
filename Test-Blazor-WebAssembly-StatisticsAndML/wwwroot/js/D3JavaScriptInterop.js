@@ -178,7 +178,7 @@ function createD3SvgObject(data, mean, title) {
         .attr("text-anchor", "middle")
         .attr("x", width/2)
         .attr("y", height + margin.bottom/1.25)
-        .text("Count of observations")
+        .text("Count of observations (Count of Random Variable - X)")
         .style("font-size", "9px")
         .style("font-weight", "bold");
 
