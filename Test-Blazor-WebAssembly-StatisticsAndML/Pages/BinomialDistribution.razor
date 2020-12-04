@@ -16,17 +16,17 @@
                    value="@this.Probability" @onchange="@OnProbabilityUpdated" oninput="probabilityOutput.value=probabilityInput.value/100" />
             <output name="probabilityOutput" id="probabilityOutput" for="probabilityInput">@(this.Probability/100)</output>
         </dd>
-        <dt>Trials:</dt>
-        <dd>
-            <input id="trialsInput" type="range" class="" min="0" max="500" step="10"
-                    value="@this.Trials" @onchange="@OnTrialsUpdated" oninput="trialsOutput.value=trialsInput.value" />
-            <output name="trialsOutput" id="trialsOutput" for="probabilityInput">@this.Trials</output>
-        </dd>
         <dt>Samples Size:</dt>
         <dd>
             <input id="samplesSizeInput" type="range" class="" min="250" max="20000" step="250"
                    value="@this.SamplesSize" @onchange="@OnSamplesSizeUpdated" oninput="samplesSizeOutput.value=samplesSizeInput.value" />
             <output name="samplesSizeOutput" id="samplesSizeOutput" for="samplesSizeInput">@this.SamplesSize</output>
+        </dd>
+        <dt>Trials:</dt>
+        <dd>
+            <input id="trialsInput" type="range" class="" min="0" max="500" step="10"
+                   value="@this.Trials" @onchange="@OnTrialsUpdated" oninput="trialsOutput.value=trialsInput.value" />
+            <output name="trialsOutput" id="trialsOutput" for="probabilityInput">@this.Trials</output>
         </dd>
     </dl>
 </div>
@@ -56,7 +56,6 @@
 
     public List<Data> samples = new List<Data>(1000);
     double variance;
-
 
     protected override Task OnParametersSetAsync()
     {

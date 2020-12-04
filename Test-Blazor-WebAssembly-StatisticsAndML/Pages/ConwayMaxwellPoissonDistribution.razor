@@ -16,17 +16,17 @@
                    value="@this.Lambda" @onchange="@OnLambdaUpdated" oninput="lambdaOutput.value=lambdaInput.value" />
             <output name="lambdaOutput" id="lambdaOutput" for="lambdaInput">@this.Lambda</output>
         </dd>
-        <dt>Nu:</dt>
-        <dd>
-            <input id="nuInput" type="range" min="4" max="40" step="2"
-                   value="@this.Nu" @onchange="@OnNuUpdated" oninput="nuOutput.value=nuInput.value/10" />
-            <output name="nuOutput" id="nuOutput" for="nuInput">@(this.Nu/10)</output>
-        </dd>
         <dt>Samples Size:</dt>
         <dd>
             <input id="samplesSizeInput" type="range" class="" min="250" max="20000" step="250"
                    value="@this.SamplesSize" @onchange="@OnSamplesSizeUpdated" oninput="samplesSizeOutput.value=samplesSizeInput.value" />
             <output name="samplesSizeOutput" id="samplesSizeOutput" for="samplesSizeInput">@this.SamplesSize</output>
+        </dd>
+        <dt>Nu:</dt>
+        <dd>
+            <input id="nuInput" type="range" min="4" max="40" step="2"
+                   value="@this.Nu" @onchange="@OnNuUpdated" oninput="nuOutput.value=nuInput.value/10" />
+            <output name="nuOutput" id="nuOutput" for="nuInput">@(this.Nu/10)</output>
         </dd>
     </dl>
 </div>
